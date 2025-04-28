@@ -11,11 +11,12 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    await User.create({
       displayname,
       email,
       password: hashedPassword,
     });
+    const user = await User.findOne({ email }).select("-password -_id -createdAt -updatedAt -__v");
     return res.status(201).json({ message: "User created successfully", user });
   } catch (error) {
     console.log(error);
@@ -38,7 +39,10 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "credentials are incorrect" });
     }
-    return res.status(200).json({ message: "Login successful", user });
+    const loginUser = await User.findOne({ email: req.body.email }).select(
+      "-password -_id -createdAt -updatedAt -__v"
+    )
+    return res.status(200).json({ message: "Login successful", loginUser });
   } catch (error) {
     console.log(error);
   }
