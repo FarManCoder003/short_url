@@ -42,4 +42,4 @@ const loginUser = async (req, res) => {
   } catch (error) {}
 };
 
-export { createUser };
+export { createUser, loginUser };
