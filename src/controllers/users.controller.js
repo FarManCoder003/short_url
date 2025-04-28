@@ -39,7 +39,9 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "credentials are incorrect" });
     }
     return res.status(200).json({ message: "Login successful", user });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { createUser, loginUser };
