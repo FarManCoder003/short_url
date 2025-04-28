@@ -22,4 +22,24 @@ const createUser = async (req, res) => {
   }
 };
 
+const loginUser = async (req, res) => {
+  try {
+    if (Object.values(req.body).some((value) => !value?.trim())) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(400).json({ message: "credentials are incorrect" });
+    }
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "credentials are incorrect" });
+    }
+    return res.status(200).json({ message: "Login successful", user });
+  } catch (error) {}
+};
+
 export { createUser };
