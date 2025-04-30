@@ -91,6 +91,17 @@
     </div>
 
     <script>
+      function shortenUrl() {
+        const longUrl = document.getElementById("urlInput").value;
+        if (!longUrl) return;
+
+        const shortUrl = "https://shrt.url/abc123";
+
+        document.getElementById("resultBox").style.display = "block";
+        document.getElementById("shortUrl").textContent = shortUrl;
+        document.getElementById("shortUrl").href = shortUrl;
+      }
+
       function copyUrl() {
         const url = document.getElementById("shortUrl").textContent;
         navigator.clipboard.writeText(url);
