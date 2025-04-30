@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - ShortURL</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 40px 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        color: #2563eb;
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      input:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      button:hover {
+        background-color: #1d4ed8;
+      }
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .login-link a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      .error {
+        color: #dc2626;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Create Account</h1>
+      <form id="registerForm" action="/api/v1/users/register" method="POST">
+        <div class="form-group">
+          <label for="name">User Name</label>
+          <input
+            type="text"
+            id="name"
+            name="displayname"
+            required
+            placeholder="John Doe"
+          />
+          <div class="error" id="nameError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="john@example.com"
+          />
+          <div class="error" id="emailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Password"
+          />
+          <div class="error" id="passwordError"></div>
+        </div>
+
+        <button type="submit">Create Account</button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="/api/v1/users/login">Log in</a>
+      </div>
+    </div>
+
+    <script>
+      // Basic client-side validation
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          let valid = true;
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Reset errors
+          document
+            .querySelectorAll(".error")
+            .forEach((el) => (el.style.display = "none"));
+
+          // Name validation
+          if (name.length < 3) {
+            document.getElementById("nameError").textContent =
+              "Name must be at least 3 characters";
+            document.getElementById("nameError").style.display = "block";
+            valid = false;
+          }
+
+          // Email validation
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById("emailError").textContent =
+              "Please enter a valid email address";
+            document.getElementById("emailError").style.display = "block";
+            valid = false;
+          }
+
+          // Password validation
+          if (password.length < 8) {
+            document.getElementById("passwordError").textContent =
+              "Password must be at least 8 characters";
+            document.getElementById("passwordError").style.display = "block";
+            valid = false;
+          }
+
+          if (!valid) e.preventDefault();
+        });
+    </script>
+  </body>
+</html>

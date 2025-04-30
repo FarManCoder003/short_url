@@ -33,7 +33,8 @@ const createUser = async (req, res) => {
       expiresIn: "1d",
     });
     await sendMail(email, "Email Verification", "", mailVerification(token));
-    return res.status(201).json({ message: "User created successfully", user });
+    // return res.status(201).json({ message: "User created successfully", user });
+    return res.render(login);
   } catch (error) {
     console.log(error);
   }
@@ -76,6 +77,9 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "credentials are incorrect" });
     }
+    if (!user.emailVerified) {
+      return res.status(400).json({ message: "Email not verified" });
+    }
     const loginUser = await User.findOne({ email: req.body.email }).select(
       "-password -_id -createdAt -updatedAt -__v"
     );
@@ -85,4 +89,13 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { createUser, loginUser, verifyEmail };
+const registerView = async (req, res) => {
+  return res.render("register");
+};
+
+const loginView = async (req, res) => {
+  return res.render("login");
+};
+
+export { createUser, loginUser, loginView, registerView, verifyEmail };
+
