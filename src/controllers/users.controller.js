@@ -33,8 +33,7 @@ const createUser = async (req, res) => {
       expiresIn: "1d",
     });
     await sendMail(email, "Email Verification", "", mailVerification(token));
-    // return res.status(201).json({ message: "User created successfully", user });
-    return res.render(login);
+    return res.render("login");
   } catch (error) {
     console.log(error);
   }
