@@ -150,6 +150,7 @@
       <form id="urlForm" onsubmit="handleSubmit(event)">
         <label for="url">Enter URL:</label>
         <input type="url" id="url" name="url" required />
+        <input type="text" hidden value="<%= user._id %>" name="user"/>
         <button type="submit">Shorten</button>
       </form>
       <div id="result" style="display: none"></div>

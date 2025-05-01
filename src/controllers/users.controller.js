@@ -80,7 +80,7 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Email not verified" });
     }
     const loginUser = await User.findOne({ email: req.body.email }).select(
-      "-password -_id -createdAt -updatedAt -__v"
+      "-password -createdAt -updatedAt -__v"
     );
     return res.render("index", { user: loginUser });
   } catch (error) {
