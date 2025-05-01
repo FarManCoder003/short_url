@@ -10,6 +10,7 @@ const createShortUrl = async (req, res) => {
     const shortUrl = shortUrlGenerator();
     const newUrl = new Url({ url, shortUrl });
     await newUrl.save();
+    return res.status(200).json({ shortUrl });
   } catch (error) {
     console.log(error);
   }
