@@ -82,7 +82,7 @@ const loginUser = async (req, res) => {
     const loginUser = await User.findOne({ email: req.body.email }).select(
       "-password -createdAt -updatedAt -__v"
     );
-    return res.redirect("/?" + loginUser._id);
+    return res.redirect("/?id=" + loginUser._id);
   } catch (error) {
     console.log(error);
   }

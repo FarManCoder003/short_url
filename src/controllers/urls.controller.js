@@ -10,9 +10,16 @@ const createShortUrl = async (req, res) => {
     const shortUrl = shortUrlGenerator();
     const newUrl = new Url({ url, shortUrl, user });
     await newUrl.save();
-    return res.status(200).json({ shortUrl });
+    return res.redirect("/?id=" + user);
   } catch (error) {
     console.log(error);
   }
 };
-export { createShortUrl };
+const getShortUrl = async (req, res) => {
+  const { id } = req.query;
+  const urls = await Url.find({ user: id }).select(
+    "-__v -user -_id -createdAt -updatedAt"
+  );
+  return res.render("index", { urls });
+};
+export { createShortUrl, getShortUrl };
