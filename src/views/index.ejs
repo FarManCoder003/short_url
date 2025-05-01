@@ -38,12 +38,18 @@
         gap: 1rem;
         margin-bottom: 2rem;
       }
+      .form-row {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+      }
       label {
         font-weight: 500;
         color: #1f2937;
         font-size: 1.1rem;
       }
       input[type="url"] {
+        flex: 1;
         padding: 0.8rem;
         border: 2px solid #e5e7eb;
         border-radius: 6px;
@@ -56,6 +62,7 @@
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
       }
       button[type="submit"] {
+        width: 100%;
         padding: 0.8rem 1.5rem;
         background-color: #2563eb;
         color: white;
@@ -63,48 +70,46 @@
         border-radius: 6px;
         font-size: 1rem;
         cursor: pointer;
+        white-space: nowrap;
         transition: background-color 0.2s;
-        align-self: flex-start;
+        max-width: 180px;
       }
       button[type="submit"]:hover {
         background-color: #1d4ed8;
       }
-      .urls {
-        display: grid;
-        gap: 1rem;
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
-      .url-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      th,
+      td {
         padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      th {
         background-color: #f8fafc;
-        border-radius: 6px;
-        border: 1px solid #e2e8f0;
+        color: #1f2937;
+        font-weight: 600;
       }
-      .url-item div {
-        flex: 1;
-        margin-right: 1rem;
+      tr:hover {
+        background-color: #f8fafc;
       }
-      .url-item a {
+      .table-wrapper {
+        overflow-x: auto;
+      }
+      .url-link {
         color: #2563eb;
         text-decoration: none;
         word-break: break-all;
       }
-      .url-item a:hover {
+      .url-link:hover {
         text-decoration: underline;
-      }
-      .copy-btn {
-        padding: 0.5rem 1rem;
-        background-color: #e0e7ff;
-        color: #2563eb;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-      }
-      .copy-btn:hover {
-        background-color: #c7d2fe;
       }
       .loading {
         display: inline-block;
@@ -131,35 +136,72 @@
         h1 {
           font-size: 2rem;
         }
-        .url-item {
+        .form-row {
           flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
         }
-        .copy-btn {
-          width: 100%;
+        button[type="submit"] {
+          padding: 0.7rem 1rem;
+        }
+        th,
+        td {
+          padding: 0.75rem;
+          font-size: 0.9rem;
         }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>ShortURL <%= urls %></h1>
+      <h1>ShortURL</h1>
       <p>Free URL Shortener</p>
-      <form id="urlForm" method="post">
+      <form id="urlForm" action="/api/v1/users/urls" method="post">
         <label for="url">Enter URL:</label>
-        <input type="url" id="url" name="url" required />
+        <div class="form-row">
+          <input type="url" id="url" name="url" required />
+          <button type="submit">Shorten</button>
+        </div>
         <input type="text" hidden name="user" id="user" value="" />
-        <button type="submit">Shorten</button>
       </form>
       <div id="result" style="display: none"></div>
-      <div class="urls"></div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Short URL</th>
+              <th>Original URL</th>
+              <th>Clicks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (typeof urls != 'undefined') { %> <% urls.forEach(element => {
+            %>
+            <tr>
+              <td>
+                <a
+                  href="http://localhost:8000/api/v1/users/urls/<%= element.shortUrl %>"
+                  class="url-link"
+                >
+                  http://localhost:8000/api/v1/users/urls/<%= element.shortUrl
+                  %>
+                </a>
+              </td>
+              <td>
+                <a href="<%= element.url %>" class="url-link">
+                  <%= element.url %>
+                </a>
+              </td>
+              <td><%= element.clicks %></td>
+            </tr>
+            <% }) %> <% } %>
+          </tbody>
+        </table>
+      </div>
     </div>
     <script>
       if (!location.search) {
         window.location.href = "/api/v1/users/login";
       }
-      document.getElementById("user").value = location.search.slice(1);
+      document.getElementById("user").value = location.search.slice(4);
     </script>
   </body>
 </html>

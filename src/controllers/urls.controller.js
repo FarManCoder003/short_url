@@ -22,4 +22,9 @@ const getShortUrl = async (req, res) => {
   );
   return res.render("index", { urls });
 };
-export { createShortUrl, getShortUrl };
+const redirectShortUrl = async (req, res) => {
+  const { shortUrl } = req.params;
+  const { url } = await Url.findOne({ shortUrl });
+  return res.redirect(url);
+};
+export { createShortUrl, getShortUrl, redirectShortUrl };
