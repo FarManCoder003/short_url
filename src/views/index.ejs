@@ -143,14 +143,13 @@
     </style>
   </head>
   <body>
-    <% if (typeof user !== 'undefined' && user) { %>
     <div class="container">
       <h1>ShortURL</h1>
       <p>Free URL Shortener</p>
       <form id="urlForm" onsubmit="handleSubmit(event)">
         <label for="url">Enter URL:</label>
         <input type="url" id="url" name="url" required />
-        <input type="text" hidden value="<%= user._id %>" name="user"/>
+        <input type="text" hidden name="user" id="user" value="" />
         <button type="submit">Shorten</button>
       </form>
       <div id="result" style="display: none"></div>
@@ -170,6 +169,7 @@
       async function handleSubmit(event) {
         event.preventDefault();
         const urlInput = document.getElementById("url");
+        const userInput = document.getElementById("user");
         const resultDiv = document.getElementById("result");
         const submitButton = event.target.querySelector("button");
 
@@ -180,42 +180,43 @@
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ url: urlInput.value }),
+            body: JSON.stringify({
+              url: urlInput.value,
+              user: userInput.value,
+            }),
           });
+
+          if (!response.ok) {
+            throw new Error("Server responded with an error");
+          }
 
           const data = await response.json();
 
-          if (response.ok) {
-            resultDiv.innerHTML = `
-              <div class="url-item">
-                <div>
-                  <a href="/api/v1/users/urls/${data.shortUrl}" target="_blank">
-                    ${window.location.origin}/api/v1/users/urls/${data.shortUrl}
-                  </a>
-                </div>
+          resultDiv.innerHTML = `
+            <div class="url-item">
+              <div>
+                <a href="/api/v1/users/urls/${data.shortUrl}" target="_blank">
+                  ${window.location.origin}/api/v1/users/urls/${data.shortUrl}
+                </a>
               </div>
-            `;
-            resultDiv.style.display = "block";
-            urlInput.value = "";
-          } else {
-            resultDiv.innerHTML = `<p style="color: red;">${
-              data.message || "Error creating short URL"
-            }</p>`;
-            resultDiv.style.display = "block";
-          }
+            </div>
+          `;
+          resultDiv.style.display = "block";
+          urlInput.value = "";
         } catch (error) {
+          console.error("Error:", error);
           resultDiv.innerHTML =
-            '<p style="color: red;">Error connecting to server</p>';
+            '<p style="color: red;">Error connecting to server. Please try again.</p>';
           resultDiv.style.display = "block";
         } finally {
           submitButton.disabled = false;
         }
       }
+
+      if (!location.search) {
+        window.location.href = "/api/v1/users/login";
+      }
+      document.getElementById("user").value = location.search.slice(1);
     </script>
-    <% } else { %>
-    <script>
-      window.location.href = "/api/v1/users/login";
-    </script>
-    <% } %>
   </body>
 </html>
