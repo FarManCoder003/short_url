@@ -1,6 +1,7 @@
 import e from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import urlRoute from "./routes/urls.route.js";
 import userRoute from "./routes/users.route.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,12 +14,15 @@ app.set("view engine", "ejs");
 
 app.use(e.json({ limit: "1mb" }));
 app.use(e.urlencoded({ limit: "1mb", extended: true }));
+
 app.use("/api/v1", userRoute);
+app.use("/api/v1", urlRoute);
+
 app.get("/", (_, res) => {
   return res.render("index");
 });
+
 app.all("\\*", (_, res) => {
   return res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
 });
 export { app };
-

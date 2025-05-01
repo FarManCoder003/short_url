@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose"
 
 const urlSchema = new Schema(
   {
-    mainUrl: {
+    url: {
       type: String,
       required: true,
     },

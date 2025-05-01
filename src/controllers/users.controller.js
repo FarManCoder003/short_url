@@ -82,7 +82,7 @@ const loginUser = async (req, res) => {
     const loginUser = await User.findOne({ email: req.body.email }).select(
       "-password -_id -createdAt -updatedAt -__v"
     );
-    return res.status(200).json({ message: "Login successful", loginUser });
+    return res.render("index", { user: loginUser });
   } catch (error) {
     console.log(error);
   }
@@ -97,4 +97,3 @@ const loginView = async (req, res) => {
 };
 
 export { createUser, loginUser, loginView, registerView, verifyEmail };
-
