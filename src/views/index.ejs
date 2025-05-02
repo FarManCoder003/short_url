@@ -100,8 +100,30 @@
       tr:hover {
         background-color: #f8fafc;
       }
+      table form {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: flex-end;
+      }
       .table-wrapper {
         overflow-x: auto;
+      }
+      .user-input {
+        display: none;
+      }
+      button.delete-btn {
+        padding: 0.5rem 1rem;
+        background-color: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      button.delete-btn:hover {
+        background-color: #b91c1c;
       }
       .url-link {
         color: #2563eb;
@@ -140,7 +162,14 @@
           flex-direction: column;
         }
         button[type="submit"] {
-          padding: 0.7rem 1rem;
+          max-width: 100%;
+        }
+        button.delete-btn {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
+        }
+        table form {
+          justify-content: center;
         }
         th,
         td {
@@ -163,6 +192,7 @@
         <input type="text" hidden name="user" id="user" value="" />
       </form>
       <div id="result" style="display: none"></div>
+      <% if (typeof urls != 'undefined' && urls.length > 0) { %>
       <div class="table-wrapper">
         <table>
           <thead>
@@ -170,15 +200,16 @@
               <th>Short URL</th>
               <th>Original URL</th>
               <th>Clicks</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <% if (typeof urls != 'undefined') { %> <% urls.forEach(element => {
-            %>
+            <% urls.forEach(element => { %>
             <tr>
               <td>
                 <a
                   href="http://localhost:8000/api/v1/users/urls/<%= element.shortUrl %>"
+                  target="_blank"
                   class="url-link"
                 >
                   http://localhost:8000/api/v1/users/urls/<%= element.shortUrl
@@ -191,17 +222,32 @@
                 </a>
               </td>
               <td><%= element.clicks %></td>
+              <td>
+                <form action="/api/v1/users/urls/delete" method="post">
+                  <input
+                    type="text"
+                    hidden
+                    name="shortUrl"
+                    value="<%= element.shortUrl %>"
+                  />
+                  <input type="text" hidden name="user" id="user" value="" />
+                  <button type="submit" class="delete-btn">Delete</button>
+                </form>
+              </td>
             </tr>
-            <% }) %> <% } %>
+            <% }) %>
           </tbody>
         </table>
       </div>
+      <% } %>
     </div>
     <script>
       if (!location.search) {
         window.location.href = "/api/v1/users/login";
       }
-      document.getElementById("user").value = location.search.slice(4);
+      document.querySelectorAll("#user").forEach((el) => {
+        el.value = location.search.split("=")[1];
+      });
     </script>
   </body>
 </html>

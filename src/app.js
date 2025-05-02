@@ -21,7 +21,7 @@ app.use("/api/v1", urlRoute);
 
 app.get("/", getShortUrl);
 
-app.all("\\*", (_, res) => {
+app.all("*path", (req, res) => {
   return res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
 });
 export { app };

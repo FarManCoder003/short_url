@@ -24,7 +24,14 @@ const getShortUrl = async (req, res) => {
 };
 const redirectShortUrl = async (req, res) => {
   const { shortUrl } = req.params;
-  const { url } = await Url.findOne({ shortUrl });
-  return res.redirect(url);
+  const url = await Url.findOne({ shortUrl });
+  url.clicks++;
+  await url.save();
+  return res.redirect(url.url);
 };
-export { createShortUrl, getShortUrl, redirectShortUrl };
+const deleteShortUrl = async (req, res) => {
+  const { shortUrl, user } = req.body;
+  await Url.findOneAndDelete({ shortUrl });
+  return res.redirect("/?id=" + user);
+};
+export { createShortUrl, deleteShortUrl, getShortUrl, redirectShortUrl };
