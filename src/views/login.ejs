@@ -121,12 +121,10 @@
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
 
-          // Reset errors
           document
             .querySelectorAll(".error")
             .forEach((el) => (el.style.display = "none"));
 
-          // Email validation
           if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             document.getElementById("emailError").textContent =
               "Please enter a valid email address";
@@ -134,7 +132,6 @@
             valid = false;
           }
 
-          // Password validation
           if (password.length < 8) {
             document.getElementById("passwordError").textContent =
               "Password must be at least 8 characters";
